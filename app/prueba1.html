@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MappacheTest</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta charset="utf-8"/>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        #container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<script type="text/javascript" src="../js/awe-v8.js"></script>
+<script type="text/javascript" src="../js/awe-loader.js"></script>
+<script type="text/javascript">
+    window.addEventListener('load', function() {
+        // initialize awe after page loads
+        window.awe.init({
+            // automatically detect the device type
+            device_type: awe.AUTO_DETECT_DEVICE_TYPE,
+            // populate some default settings
+            settings: {
+                container_id: 'container',
+                fps: 30,
+                default_camera_position: { x:0, y:0, z:0 },
+                default_lights:[
+                    {
+                        id: 'hemisphere_light',
+                        type: 'hemisphere',
+                        color: 0xCCCCCC
+                    },
+                ],
+            },
+            ready: function() {
+                var d = '?_='+Date.now();
+
+                // load js files based on capability detection then setup the scene if successful
+                awe.util.require([
+                    {
+                        capabilities: ['webgl','gum'],
+                        files: [
+                            [ '../js/awe-standard-dependencies.js'+d, '../js/awe-standard.js'+d ], // core dependencies for this app
+                            ['../js/plugins/StereoEffect.js'+d, '../js/plugins/VREffect.js'+d], // dependencies for render effects
+                            '../js/plugins/awe.rendering_effects.js'+d, '../marker_ar/awe.marker_ar.js'+d,
+                            '../marker_ar/awe-jsartoolkit-dependencies.js',
+                            '../js/plugins/awe-standard-object_clicked_or_focused.js'+d, // object click/tap handling plugin
+                            'awe.gyro.js'+d, // basic gyro handling
+                            'awe.mouse.js'+d, // basic mouse handling
+                        ],
+                        success: function() {
+                            // setup and paint the scene
+                            awe.setup_scene();
+                            // HAY QUE REGISTRAR ALGUN PLUGIN PARA EL TOUCH*****
+                            var click_plugin = awe.plugins.view('object_clicked');
+                            if (click_plugin) {
+                                click_plugin.register();
+                                click_plugin.enable();
+                            }
+                            var gyro_plugin = awe.plugins.view('gyro');
+                            if (gyro_plugin) {
+                                gyro_plugin.enable();
+                            }
+                            var mouse_plugin = awe.plugins.view('gyro');
+                            if (gyro_plugin) {
+                                gyro_plugin.enable();
+                            }
+
+                            awe.settings.update({data:{value: 'ar'}, where:{id: 'view_mode'}})
+                            var render_effects_plugin = awe.plugins.view('render_effects');
+                            if (render_effects_plugin) {
+                                render_effects_plugin.enable();
+                            }
+
+                            // setup some code to handle when an object is clicked/tapped
+                            window.addEventListener('object_clicked', function(e) {
+                                var p = awe.projections.view(e.detail.projection_id);
+                                awe.projections.update({ // rotate clicked object by 180 degrees around x and y axes over 10 seconds
+                                    data:{
+                                        animation: {
+                                            duration: 10,
+                                        },
+                                        rotation:{ y: p.rotation.y+180, x: p.rotation.x+180 }
+                                    },
+                                    where:{ id:e.detail.projection_id }
+                                });
+                            }, false);//*/
+
+                            /*/touching 2.0 MUCHO MAS CORTA - no anda.******
+                            var fingering;
+                            var previousMousePosition = {
+                              x: 0,
+                              y: 0
+                            };
+                            window.addEventListener('mousedown', function(e) {
+                              var fingering = true;
+                              var p = awe.projections.view(e.detail.projection_id)
+                            });
+                            window.addEventListener('mousedrag', function(e) {
+                              var deltaMove = {
+                                x: e.offsetX-previousMousePosition.x,
+                                y: e.offsetY-previousMousePosition.y
+                              };
+                              if(fingering){
+                                awe.projections.update({
+                                  data:{
+                                    rotation:{
+                                      y: p.rotation.deltaMove.y,
+                                      x: p.rotation.deltaMove.x //sera que funca?
+                                    },
+                                    where:{ id:e.detail.projection_id } }
+                                });
+                              }//lave del if
+                              previousMousePosition = {
+                                x: e.offsetX,
+                                y: e.offsetY
+                              };
+                            });
+                            window.addEventListener('mouseup',function(e) {
+                              fingering = false;
+                            });//*/
+
+
+
+                            // add some points of interest (poi) for each of the compass points
+                            awe.pois.add({ id:'north', position: { x:0, y:0, z:200 } });
+                            awe.pois.add({ id:'north_east', position: { x:200, y:0, z:200 } });
+                            awe.pois.add({ id:'east', position: { x:200, y:0, z:0 } });
+                            awe.pois.add({ id:'south_east', position: { x:200, y:0, z:-200 } });
+                            awe.pois.add({ id:'south', position: { x:0, y:0, z:-200 } });
+                            awe.pois.add({ id:'south_west', position: { x:-200, y:0, z:-200 } });
+                            awe.pois.add({ id:'west', position: { x:-200, y:0, z:0 } });
+                            awe.pois.add({ id:'north_west', position: { x:-200, y:0, z:200 } });
+
+                            // add projections to each of the pois
+                            awe.projections.add({
+                                id:'n',
+                                scale: {x:30,y:30,z:30},
+                                geometry:{ path:'OBJ/light-cruiser-tenryuu.obj' },
+                                rotation: { x:0, y:90, z:0 },
+                                position: { x:0, y:0, z:0 }
+                            }, { poi_id: 'north' }); //*/
+
+                            awe.projections.add({
+                                id:'ne',
+                                scale: {x:10,y:10,z:10},
+                                geometry:{ path: 'OBJ/mappache.obj' },
+                                position: { x:0, y:0, z:0 },
+                                rotation: { x:0, y:45, z:0 },
+                                //texture: {path: 'textures/mappache2.png'},
+                            }, { poi_id: 'north_east' });
+
+                            awe.projections.add({
+                                id:'e',
+                                geometry:{ shape:'circle', radius:30, segments:110 },
+                                //position { x:0, y:0, z:0 },
+                                rotation: { x:0, y:0, z:0 },
+                                texture:{ path: 'textures/mappache2.png' },
+                            }, { poi_id: 'east' });
+
+                            awe.projections.add({
+                                id:'se',
+                                //scale: { x:5, y:5, z:5 }
+                                geometry:{ path: 'OBJ/XY_PikachuF.obj' }, //pikachu no acepta scale. impide que cargue todo.
+                                position: { x:0, y:0, z:0 },
+                                rotation: { x:0, y:0, z:0 },
+
+                            }, { poi_id: 'south_east' });
+
+                            awe.projections.add({
+                                id:'s',
+                                scale: {x:0.7,y:0.7,z:0.7},
+                                geometry:{ path: 'OBJ/Harley.obj'},
+                                position: { x:0, y:0, z:0 },
+                                rotation: { x:0, y:0, z:0 },
+                                texture: {path: 'textures/Farmhouse.jpg'},
+                            }, { poi_id: 'south' });
+
+                            awe.projections.add({
+                                id:'sw',
+                                scale: {x:5, y:5, z:5},
+				                        geometry: { path: 'OBJ/BR_Gengar.obj' },
+                                position: { x:0, y:0, z:0 },
+                                rotation: { x:100, y:0, z:0 },
+                                //texture: {path: 'textures/BR_Gengar.png'},
+                            }, { poi_id: 'south_west' });
+
+                            awe.projections.add({
+                                id:'w',
+                                scale: {x:50,y:50,z:50},
+                                geometry:{ path: 'OBJ/Po.obj'},
+                                position: { x:0, y:0, z:0 },
+                                rotation: { x:0, y:90, z:0 },
+                                texture: {path: 'textures/Po.png'},
+                            }, { poi_id: 'west' });
+
+                            awe.projections.add({
+                                id:'nw',
+                                scale: {x:15, y:15, z:15},
+				                        geometry: { path: 'OBJ/Fan.obj' },
+                                position: { x:0, y:0, z:0 },
+                                rotation: { x:0, y:180, z:0 },
+                                texture: {path: 'textures/Fan_Col.png'},
+                            }, { poi_id: 'north_west' });
+
+                        },
+                    },
+                    { // else create a fallback
+                        capabilities: [],
+                        files: [],
+                        success: function() {
+                            document.body.innerHTML = '<p>This demo currently requires a standards compliant mobile browser.';
+                            return;
+                        },
+                    },
+                ]);
+            }
+        });
+    });
+</script>
+</body>
+</html>
