@@ -114,31 +114,15 @@
 
     // cargamos pruebaJS
     loader.load( 'OBJ/prueba.js', function ( geometry, materials ) {
-			var skinnedMesh = new THREE.SkinnedMesh(geometry, new THREE.MultiMaterial(materials));
-      skinnedMesh.scale.set( 50, 50, 50 );
 
       for ( var k in materials ) {
         alert(k);
-        materials[k].skinning = true; }
-
-				scene.add( skinnedMesh );
-				animate(skinnedMesh);
-      });
-
-//prueba de Animacion lucio
-
-function animate(skinnedMesh) {
-    var materials = skinnedMesh.material.materials;
-
-    for (var k in materials) {
         materials[k].skinning = true;
-    }
 
-    THREE.AnimationHandler.add(skinnedMesh.geometry.animation);
-    animation = new THREE.Animation(skinnedMesh, "ArmatureAction", THREE.AnimationHandler.CATMULLROM);
-    animation.play();
-}
+      }
 
+      skinnedMesh = new THREE.SkinnedMesh(geometry, new THREE.MultiMaterial(materials));
+      skinnedMesh.scale.set( 50, 50, 50 );
 
       // Note: We test the corresponding code path with this example -
       // you shouldn't include the next line into your own code:
@@ -150,7 +134,7 @@ function animate(skinnedMesh) {
 
   // Start playing the animation
           //animation.play(); no existe, ver lo de arriba.
-/*          mixer = new THREE.AnimationMixer( skinnedMesh );
+          mixer = new THREE.AnimationMixer( skinnedMesh );
           var perro = mixer.clipAction( skinnedMesh.geometry.animations[ 0 ] );
           perro.setLoop(THREE.LoopRepeat);
           perro.clampWhenFinished = true;
@@ -158,7 +142,7 @@ function animate(skinnedMesh) {
           scene.add( skinnedMesh );
 
     });
-*/
+
 
 		// draw!
 		//render();//lo pase adentro de animate, fijarse.
