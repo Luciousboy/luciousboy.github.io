@@ -113,7 +113,7 @@
 			var mat = new THREE.MultiMaterial(materials);
 				mat.skinning = true;
 
-                mesh = new THREE.SkinnedMesh( geometry, mat );
+            var mesh = new THREE.SkinnedMesh( geometry, mat );
                 mesh.scale.set( 50, 50, 50 );
 
 			mixer = new THREE.AnimationMixer( mesh );
@@ -123,9 +123,10 @@
 		        perro.clampWhenFinished = true;
 		        perro.play();
 		        scene.add( mesh );
-
+			
 				//mixer.update( clock.getDelta() );
-				animate();
+				//animate();
+			animate(mesh);
 
                 //var animation = new THREE.AnimationMixer(
                 //    mesh,
@@ -134,7 +135,6 @@
                 //animation.play();
 
 		});
-
 
 
 
