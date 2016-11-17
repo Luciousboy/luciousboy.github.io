@@ -127,7 +127,7 @@
 
 //prueba de Animacion lucio
 
-/*function animate(skinnedMesh) {
+function animate(skinnedMesh) {
     var materials = skinnedMesh.material.materials;
 
     for (var k in materials) {
@@ -138,7 +138,7 @@
     animation = new THREE.Animation(skinnedMesh, "ArmatureAction", THREE.AnimationHandler.CATMULLROM);
     animation.play();
 }
-*/
+
 
       // Note: We test the corresponding code path with this example -
       // you shouldn't include the next line into your own code:
@@ -150,15 +150,15 @@
 
   // Start playing the animation
           //animation.play(); no existe, ver lo de arriba.
-          mixer = new THREE.AnimationMixer( skinnedMesh );
-          var perro = mixer.clipAction( skinnedMesh.geometry.animations[ 1 ] );
+/*          mixer = new THREE.AnimationMixer( skinnedMesh );
+          var perro = mixer.clipAction( skinnedMesh.geometry.animations[ 0 ] );
           perro.setLoop(THREE.LoopRepeat);
           perro.clampWhenFinished = true;
           perro.play();
           scene.add( skinnedMesh );
 
     });
-
+*/
 
 		// draw!
 		//render();//lo pase adentro de animate, fijarse.
