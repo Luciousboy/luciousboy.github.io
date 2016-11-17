@@ -30,8 +30,8 @@
 <body>
 <canvas id="debugCanvas"></canvas>
 <div id="container"></div>
-<script type="text/javascript" src="../../js/awe-v8.js"></script>
-<script type="text/javascript" src="../../js/awe-loader.js"></script>
+<script type="text/javascript" src="../../js/AWE/awe-v8.js"></script>
+<script type="text/javascript" src="../../js/AWE/awe-loader.js"></script>
 <script type="text/javascript">
     //   DEBUG = true;
     window.addEventListener('load', function() {
@@ -61,7 +61,7 @@
                         capabilities: ['gum','webgl'],
                         files: [
                             // base libraries
-                            [ '../js/awe-standard-dependencies.js', '../js/awe-standard.js'+d],
+                            [ '../js/AWE/awe-standard-dependencies.js', '../js/AWE/awe-standard.js'+d],
                             // plugin dependencies
                             ['../marker_ar/awe-jsartoolkit-dependencies.js','../js/plugins/StereoEffect.js', '../js/plugins/VREffect.js'],
                             //soy cheto
@@ -104,36 +104,16 @@
                              NOTE: See 64.png in this directory or https://github.com/kig/JSARToolKit/blob/master/demos/markers
                              This automatically binds your POI to that marker id - easy!
                              */
-                            /*                          
                             awe.pois.add({ id:'jsartoolkit_marker_64', position: { x:0, y:0, z:0 }, visible: false });
                             awe.projections.add({
                                 id:'marker_projection',
                                 scale: {x:50,y:50,z:50},
-                                json: { path: 'OBJ/prueba01.js' },
+                                geometry: { path: 'OBJ/Po.obj' },
                                 position: { x:0, y:0, z:0 },
-                                rotation: { x:0, y:0, z:0 },
-                               // texture: { path: 'textures/Po.png' },
-                                visible: false,
-                            }, { poi_id: 'jsartoolkit_marker_64' }); */
-                            
-                            
-                            //por que no se mueve?
-                            //http://stackoverflow.com/questions/17638933/three-js-clickable-objects
-                            
-                            
-                            awe.pois.add({ id:'jsartoolkit_marker_64', position: { x:0, y:0, z:0 }, visible: false });
-                            awe.projections.add({
-                                id:'marker_projection',
-                                scale: {x:50,y:50,z:50},
-                                //geometry: { path: 'OBJ/prueba01.obj' },
-                                //material: { path: 'OBJ/prueba01.mtl' }
-                                position: { x:0, y:0, z:0 },
-                                rotation: { x:0, y:180, z:180 },
-                                three_geometry: { path: 'OBJ/prueba01.js' },
+                                rotation: { x:0, y:90, z:190 },
+                                texture: { path: 'textures/Po.png' },
                                 visible: false,
                             }, { poi_id: 'jsartoolkit_marker_64' });
-                         
-                      
 
                             /*awe.pois.add({ id:'fixed_poi', position: { x:100, y:0, z:-250 }, visible: true });
                              awe.projections.add({

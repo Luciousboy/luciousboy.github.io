@@ -18,93 +18,188 @@
 	</head>
 	<body>
 
-		<!--<div id="container">
 
-
-		</div> Chau jQuery-->
 
 	</body>
-	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script> Chau jQuery-->
 	<script src="../js/THREE/three.js"></script>
-        <script src="../js/THREE/OrbitControls.js"></script>
+  <script src="../js/THREE/OrbitControls.js"></script>
+  <script src="../js/THREE/JSONLoader.js"></script>
+  <script src="../js/THREE/ObjectLoader.js"></script>
 	<script type="text/javascript">
 
-	// set the scene size. With this it takes the size of the screen.
-	var WIDTH = window.innerWidth,
-	    HEIGHT = window.innerHeight;
+  var WIDTH, HEIGHT, VIEW_ANGLE, ASPECT, NEAR, FAR;
+  var renderer, loader, loaderOBJ, camera, scene, pointLight, ambientLight;
+  var container, controls, mixer;
+  var sphere, sphereMaterial;
 
-	// set some camera attributes
-	var VIEW_ANGLE = 45,
-	    ASPECT = WIDTH / HEIGHT,
-	    NEAR = 0.1,
-	    FAR = 10000;
+  //defino mi loader, para usar JSON. y de paso el de OBJ tambien.
+  loader = new THREE.JSONLoader();
+  loaderOBJ = new THREE.ObjectLoader();
 
-	// get the DOM element to attach to
-	// - assume we've got jQuery to hand
 
-    container = document.createElement( 'div' );
-	container.id = 'container'
-    document.body.appendChild( container );
 
-	//var $container = $('#container'); Chau jQuery
+	init();
+	//animate();
+	//animate(skinnedMesh);//prueba polemica
 
-	// create a WebGL renderer, camera
-	// and a scene
-	var renderer = new THREE.WebGLRenderer();
-	var camera = new THREE.PerspectiveCamera(  VIEW_ANGLE,
-	                                ASPECT,
-	                                NEAR,
-	                                FAR  );
-	var scene = new THREE.Scene();
+	function init() {	// set the scene size. With this it takes the size of the screen.
+		WIDTH = window.innerWidth,
+		HEIGHT = window.innerHeight;
 
-	// the camera starts at 0,0,0 so pull it back
-	camera.position.z = 300;
+		// set some camera attributes
+		VIEW_ANGLE = 45,
+		ASPECT = WIDTH / HEIGHT,
+		NEAR = 0.1,
+		FAR = 10000;
 
-	// start the renderer
-	renderer.setSize(WIDTH, HEIGHT);
+		// get the DOM element to attach to
+		// - assume we've got jQuery to hand
 
-	// attach the render-supplied DOM element
-	//container.append(renderer.domElement);
-	container.appendChild( renderer.domElement );
+		container = document.createElement( 'div' );
+		container.id = 'container';
+		document.body.appendChild( container );
 
-	// create the sphere's material
-	var sphereMaterial = new THREE.MeshLambertMaterial(
-	{
-	    color: 0xCC0000
-	});
 
-	// set up the sphere vars
-	var radius = 50, segments = 16, rings = 16;
+		// create a WebGL renderer, camera
+		// and a scene
+		renderer = new THREE.WebGLRenderer();
+		camera = new THREE.PerspectiveCamera(  VIEW_ANGLE,
+			                            ASPECT,
+			                            NEAR,
+			                            FAR  );
+		scene = new THREE.Scene();
 
-	// create a new mesh with sphere geometry -
-	// we will cover the sphereMaterial next!
-	var sphere = new THREE.Mesh(
-	   new THREE.SphereGeometry(radius, segments, rings),
-	   sphereMaterial);
 
-	// add the sphere to the scene
-	scene.add(sphere);
+		// the camera starts at 0,0,0 so pull it back
+		camera.position.z = 300;
 
-	// and the camera
-	scene.add(camera);
+		// start the renderer
+		renderer.setSize(WIDTH, HEIGHT);
 
-	// create a point light
-	var pointLight = new THREE.PointLight( 0xFFFFFF );
+		// attach the render-supplied DOM element
+		//container.append(renderer.domElement);
+		container.appendChild( renderer.domElement );
 
-	// set its position
-	pointLight.position.x = 10;
-	pointLight.position.y = 50;
-	pointLight.position.z = 130;
 
-	// add to the scene
-	scene.add(pointLight);
+		// and the camera
+		scene.add(camera);
 
-	// draw!
-	renderer.render(scene, camera);
-		
-	//test de lucio
-	//controls = new THREE.OrbitControls( camera, renderer.domElement );
-	
+		// create a point light
+		pointLight = new THREE.PointLight( 0xFFFFFF );
+    ambientLight = new THREE.AmbientLight( 0xFFFFFF );
+
+		// set its position
+		pointLight.position.x = 10;
+		pointLight.position.y = 50;
+		pointLight.position.z = 130;
+
+		// add to the scene
+		scene.add(pointLight);
+    scene.add(ambientLight);
+
+		var clock = new THREE.Clock();
+
+		var loader = new THREE.JSONLoader();
+
+            loader.load( 'OBJ/test2.js', function ( geometry, materials ) {
+
+							for ( var k in materials ) {
+				        alert(k);
+				      }
+
+                var rojoMaterial = materials[ 0 ];
+								var grisMaterial = materials[ 1 ];
+								var mat = new THREE.MultiMaterial(materials);
+								mat.skinning = true;
+
+                mesh = new THREE.SkinnedMesh( geometry, mat );
+                mesh.scale.set( 50, 50, 50 );
+
+								mixer = new THREE.AnimationMixer( mesh );
+			          var perro = mixer.clipAction( mesh.geometry.animations[ 0 ] );//0 quiza sea todo, los otros indices pueden ser cada elem solo
+								perro.setLoop(THREE.LoopRepeat);
+			          perro.clampWhenFinished = true;
+			          perro.play();
+			          scene.add( mesh );
+
+								//mixer.update( clock.getDelta() );
+								animate();
+
+                //var animation = new THREE.AnimationMixer(
+                //    mesh,
+                //    geometry.animation
+                //);
+                //animation.play();
+
+							});
+
+
+
+
+
+		/*
+    // cargamos pruebaJS
+    loader.load( 'OBJ/prueba.js', function ( geometry, materials ) {
+
+      for ( var k in materials ) {
+        alert(k);
+        materials[k].skinning = true;
+
+      }
+
+      skinnedMesh = new THREE.SkinnedMesh(geometry, new THREE.MultiMaterial(materials));
+      skinnedMesh.scale.set( 50, 50, 50 );
+
+				 var originalMaterial = materials[ 1 ]; //no es necesario. estoy probando cosas.
+         originalMaterial.skinning = true;
+
+  // Start playing the animation
+
+          mixer = new THREE.AnimationMixer( skinnedMesh );
+          var perro = mixer.clipAction( skinnedMesh.geometry.animations[ 0 ] );
+          perro.setLoop(THREE.LoopRepeat);
+          perro.clampWhenFinished = true;
+          perro.play();
+          scene.add( skinnedMesh );
+
+    });
+		//*/
+
+		// draw!
+		//render();//lo pase adentro de animate, fijarse.
+
+		//test de lucio
+		controls = new THREE.OrbitControls( camera, renderer.domElement ); //este es la posta
+    controls.addEventListener( 'change', render );
+
+    //cambio de tamaño de ventana:
+    window.addEventListener( 'resize', onWindowResize, false );
+ 	}
+
+  function onWindowResize() {
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+  }
+  var clock = new THREE.Clock();
+	function animate() {
+  		requestAnimationFrame( animate );
+      //if (mixer) mixer.update( clock.getDelta() );
+			mixer.update( clock.getDelta() );
+  		controls.update();
+
+      render(); //quiza mas feliz aca. sino adentro de onWindowResize().
+
+	}
+	function render() {
+  //  var delta = clock.getDelta();
+    //THREE.AnimationHandler.update( delta );
+		renderer.render(scene, camera);
+	}
+
+
 	</script>
 </html>
->>>>>>> e9016b220a4dcd63e00cb616a898125c8371af0b
