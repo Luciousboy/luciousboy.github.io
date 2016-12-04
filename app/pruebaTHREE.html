@@ -46,18 +46,6 @@
 		WIDTH = window.innerWidth,
 		HEIGHT = window.innerHeight;
 
-/*
-		//prueba animacion
-
-    		requestAnimationFrame( animate );
-
-    		mesh.rotation.x += 0.01;
-    		mesh.rotation.y += 0.02;
-
-    		renderer.render( scene, camera );
-*/	
-
-
 		// set some camera attributes
 		VIEW_ANGLE = 45,
 		ASPECT = WIDTH / HEIGHT,
@@ -98,7 +86,7 @@
 
 		// create a point light
 		pointLight = new THREE.PointLight( 0xFFFFFF );
-    	ambientLight = new THREE.AmbientLight( 0xFFFFFF );
+    ambientLight = new THREE.AmbientLight( 0xFFFFFF );
 
 		// set its position
 		pointLight.position.x = 10;
@@ -107,38 +95,35 @@
 
 		// add to the scene
 		scene.add(pointLight);
-    	scene.add(ambientLight);
+    scene.add(ambientLight);
 
 		var clock = new THREE.Clock();
+
 		var loader = new THREE.JSONLoader();
 
-        
-        loader.load( 'OBJ/test2.js', function ( geometry, materials ) {
+            loader.load( 'OBJ/test2.js', function ( geometry, materials ) {
 
-
-			for ( var k in materials ) {
+							for ( var k in materials ) {
 				        alert(k);
-		      }
+				      }
 
-            var rojoMaterial = materials[ 0 ];
-			var grisMaterial = materials[ 1 ];
-			var mat = new THREE.MultiMaterial(materials);
-				mat.skinning = true;
+                var rojoMaterial = materials[ 0 ];
+								var grisMaterial = materials[ 1 ];
+								var mat = new THREE.MultiMaterial(materials);
+								mat.skinning = true;
 
-            var mesh = new THREE.SkinnedMesh( geometry, mat );
+                mesh = new THREE.SkinnedMesh( geometry, mat );
                 mesh.scale.set( 50, 50, 50 );
 
-			mixer = new THREE.AnimationMixer( mesh );
-	        var perro = mixer.clipAction( mesh.geometry.animations[ 0 ] );//0 quiza sea todo, los otros indices pueden ser cada elem solo
-	
-				perro.setLoop(THREE.LoopRepeat);
-		        perro.clampWhenFinished = true;
-		        perro.play();
-		        scene.add( mesh );
-			
-				//mixer.update( clock.getDelta() );
-				//animate();
-			animate(mesh);
+								mixer = new THREE.AnimationMixer( mesh );
+			          var perro = mixer.clipAction( mesh.geometry.animations[ 0 ] );//0 quiza sea todo, los otros indices pueden ser cada elem solo
+								perro.setLoop(THREE.LoopRepeat);
+			          perro.clampWhenFinished = true;
+			          perro.play();
+			          scene.add( mesh );
+
+								//mixer.update( clock.getDelta() );
+								animate();
 
                 //var animation = new THREE.AnimationMixer(
                 //    mesh,
@@ -146,12 +131,13 @@
                 //);
                 //animation.play();
 
-		});
+							});
 
 
 
-/*
-		
+
+
+		/*
     // cargamos pruebaJS
     loader.load( 'OBJ/prueba.js', function ( geometry, materials ) {
 
@@ -167,7 +153,6 @@
 				 var originalMaterial = materials[ 1 ]; //no es necesario. estoy probando cosas.
          originalMaterial.skinning = true;
 
-
   // Start playing the animation
 
           mixer = new THREE.AnimationMixer( skinnedMesh );
@@ -178,14 +163,14 @@
           scene.add( skinnedMesh );
 
     });
-    */
+		//*/
 
 		// draw!
 		//render();//lo pase adentro de animate, fijarse.
 
 		//test de lucio
 		controls = new THREE.OrbitControls( camera, renderer.domElement ); //este es la posta
-  		controls.addEventListener( 'change', render );
+    controls.addEventListener( 'change', render );
 
     //cambio de tamaño de ventana:
     window.addEventListener( 'resize', onWindowResize, false );
